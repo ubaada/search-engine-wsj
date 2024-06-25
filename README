@@ -1,0 +1,38 @@
+------------------------------------------------
+Design
+------------------------------------------------
+Parser: Simply builds strings which are not inside <>
+        Outputs each new word on the stdin with a newline.
+
+Indexer: Produces: a sorted dictionary (+posting record offset) to use binary search over.
+         Produces: A list of document IDs
+         Produces: A posting list for each word and corresponding document IDs
+            Posting list is delta and then variable byte encoded
+            
+Searcher: For each word:
+              Uses binary search to find the word in the dictionary
+              Reads the offset into the posting list for that word
+              Reads the posting list in the posting file and undoes the compression
+              Uses the index to find the document IDs in the document list
+         Finds the intersection of the document IDs for all words
+         Calculates the rank of each document by term frequency sum.
+         Sorts the result
+         Outputs the result
+          
+
+
+------------------------------------------------
+Usage:
+------------------------------------------------
+Compile All:
+>> make All
+
+Parser
+>> ./bin/parser <input_file> > <output_file>
+
+Indexer
+>> ./bin/indexer <output_file>
+
+Searcher
+>> ./bin/searcher word1 word2 word3 ... wordN
+
